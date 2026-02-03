@@ -4,6 +4,7 @@ from random import *
 # import pygame
 
 def lancer_monde():
+
     # ---VARIABLES ET PARAMETRAGE---
     #1 = mur
     #5 = sol
@@ -27,31 +28,48 @@ def lancer_monde():
     COLOR = "black"
     root = Tk()
     root.title("Maria Peigne")
+    root.configure(bg='black')
+
+    # Mode plein écran avec Escape pour quitter
+    root.attributes('-fullscreen', True)
+    root.bind('<Escape>', lambda e: root.destroy())
+
+    # Dimensions du jeu
+    GAME_WIDTH = 1500
+    GAME_HEIGHT = 1000
+
+    # Obtenir la taille de l'écran pour centrer le canvas
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    # Frame conteneur pour centrer le canvas
+    container = Frame(root, bg='black')
+    container.place(relx=0.5, rely=0.5, anchor='center')
 
     # Création d'un canevas (=widget permettant d'effectuer du graphisme, des animations, etc)
-    cnv = Canvas(root, width = 1500, height = 1000)
+    cnv = Canvas(container, width = GAME_WIDTH, height = GAME_HEIGHT, bg='black', highlightthickness=0)
     cnv.pack()
 
 
     # ---CREATION TEXTURE UTILISEES---
     # Création fond
-    fondvert = PhotoImage(file="Textures\moul.png") #convertir pr Tkinter
+    fondvert = PhotoImage(file=r"Textures\moul.png") #convertir pr Tkinter
     fv = cnv.create_image(750, 360, image=fondvert)
 
     # Création portail
-    portail_ferme = PhotoImage(file = "Textures\portail_ferme_m2.png")
-    portail_ouvert = PhotoImage(file = "Textures\portail_ouvert_m2.png")
+    portail_ferme = PhotoImage(file = r"Textures\portail_ferme_m2.png")
+    portail_ouvert = PhotoImage(file = r"Textures\portail_ouvert_m2.png")
 
     # Création des murs
-    brique = PhotoImage(file = "Textures\mur_pierre_m2.png")  #Utilisation PhotoImage (= Format propre à Tkinter) pour convertir l'image en précisant son adresse sur le disque
+    brique = PhotoImage(file = r"Textures\mur_pierre_m2.png")  #Utilisation PhotoImage (= Format propre à Tkinter) pour convertir l'image en précisant son adresse sur le disque
 
     # Création des cristaux
-    clef1 = PhotoImage(file = "Textures\cristal_violet_m2.png")
-    clef2 = PhotoImage(file = "Textures\cristal_bleu_m2.png")
-    clef3 = PhotoImage(file = "Textures\cristal_vert_m2.png")
+    clef1 = PhotoImage(file = r"Textures\cristal_violet_m2.png")
+    clef2 = PhotoImage(file = r"Textures\cristal_bleu_m2.png")
+    clef3 = PhotoImage(file = r"Textures\cristal_vert_m2.png")
 
     # Création sol
-    sol = PhotoImage(file = "Textures\sol_m2.png")
+    sol = PhotoImage(file = r"Textures\sol_m2.png")
     i = cnv.create_image(750, 950, image = sol)
 
 
@@ -161,12 +179,12 @@ def lancer_monde():
     mariacoord = Coord()
 
     # Création Maria
-    Maria = PhotoImage(file = "Textures\Maria.png")
-    Maria2 = PhotoImage(file = "Textures\Maria2.png") 
+    Maria = PhotoImage(file = r"Textures\Maria.png")
+    Maria2 = PhotoImage(file = r"Textures\Maria2.png") 
     img = cnv.create_image(0,0, image = Maria)
 
     def affichage_maria():
-        cnv.move(img, 25+(50*mariacoord.x), 25+(50*mariacoord.y))
+        cnv.move(img, decalage+(longueur_case*mariacoord.x), decalage+(longueur_case*mariacoord.y))
     affichage_maria()
 
     # Mouvement effectués
@@ -175,27 +193,27 @@ def lancer_monde():
             if matrix[mariacoord.y-1][mariacoord.x] <=0 : #si pas de mur
                 #sons_pas()
                 mariacoord.y -= 1
-                cnv.move(img, 0, -50)
+                cnv.move(img, 0, -longueur_case)
                 clef_trouvee() #test si clé
         elif event.char == 's': #si touche 'reculer' appuyée
             if matrix[mariacoord.y+1][mariacoord.x] <=0 : #si pas de mur
                 #sons_pas()
                 mariacoord.y += 1 
-                cnv.move(img, 0, 50)
+                cnv.move(img, 0, longueur_case)
                 clef_trouvee() #test si clé
         elif event.char == 'q': #si touche 'gauche' appuyée
             if matrix[mariacoord.y][mariacoord.x-1] <=0 : #si pas de mur
                 #sons_pas()
                 mariacoord.x -= 1
                 cnv.itemconfig(img, image = Maria2)
-                cnv.move(img, -50, 0)
+                cnv.move(img, -longueur_case, 0)
                 clef_trouvee() #test si clé
         elif event.char == 'd': #si touche 'droite' appuyée
             if matrix[mariacoord.y][mariacoord.x+1] <=0 : #si pas de mur
                 #sons_pas()
                 mariacoord.x += 1
                 cnv.itemconfig(img, image = Maria)
-                cnv.move(img, 50, 0)
+                cnv.move(img, longueur_case, 0)
                 clef_trouvee() #test si clé
               
               
