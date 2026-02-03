@@ -21,6 +21,7 @@ Maria Peigne est un dungeon crawler minimaliste développé en **Python** avec *
 | **Q** | Gauche |
 | **D** | Droite |
 | **A** | Passer le portail (si 3 clés obtenues) |
+| **Échap** | Quitter le jeu |
 
 ## 🌍 Mondes
 
@@ -38,23 +39,40 @@ Maria Peigne est un dungeon crawler minimaliste développé en **Python** avec *
 
 ```
 MariaPeigne/
-├── Maria_Peigne_monde_1.py    # Niveau 1 principal
-├── Maria_Peigne_monde_2.py    # Niveau 2 (fonction lancer_monde())
-├── README.md                   # Ce fichier
-├── Textures/                   # Images du jeu (PNG 50x50px)
-│   ├── monde1.png
-│   ├── moul.png
-│   ├── Maria.png / Maria2.png
-│   ├── clé_*.png / cristal_*.png
-│   ├── portail_*.png
+├── Maria_Peigne_monde_1.py     # Niveau 1 - Point d'entrée du jeu
+├── Maria_Peigne_monde_2.py     # Niveau 2 (fonction lancer_monde())
+├── README.md
+├── .gitignore
+│
+├── Textures/                   # Assets graphiques (PNG)
+│   ├── Maria.png               # Sprite personnage (droite)
+│   ├── Maria2.png              # Sprite personnage (gauche)
+│   ├── monde1.png              # Fond monde 1
+│   ├── moul.png                # Fond monde 2
+│   ├── mur_brique_m1.png       # Mur monde 1
+│   ├── mur_pierre_m2.png       # Mur monde 2
+│   ├── sable_m1.png            # Sol monde 1
+│   ├── sol_m2.png              # Sol monde 2
+│   ├── Clé_*.png               # Clés monde 1 (rubis, emeraude, saphir)
+│   ├── cristal_*.png           # Cristaux monde 2 (violet, bleu, vert)
+│   ├── Cactus_*.png            # Obstacles monde 1
+│   ├── lierre_m1.png           # Décoration monde 1
+│   ├── portail_*.png           # Portails (fermé/ouvert, m1/m2)
 │   └── ...
-├── Sons/                       # Fichiers audio MP3
-│   ├── vent_m1.mp3
-│   ├── pas*.mp3
-│   ├── clef*.mp3
-│   └── ouverture_portail*.mp3
-├── Ancien/                     # Archives anciennes versions
+│
+├── Sons/                       # Assets audio (MP3)
+│   ├── vent_m1.mp3             # Ambiance monde 1
+│   ├── pas1_m1.mp3             # Sons de pas (3 variantes)
+│   ├── pas2_m1.mp3
+│   ├── pas3_m1.mp3
+│   ├── clef1_m1.mp3            # Sons collecte clé (3 variantes)
+│   ├── clef2_m1.mp3
+│   ├── clef3_m1.mp3
+│   └── ouverture_portail_m1.mp3
+│
 └── Autres/                     # Fichiers additionnels
+    ├── Cahier des charges.docx
+    └── Maria_Peigne_monde_1_sans_son.py
 ```
 
 ## 🔧 Installation
@@ -110,13 +128,6 @@ La collision est gérée par une **matrice 20×30** où chaque nombre représent
 ## 👥 Crédits
 
 Jeu réalisé par **Mélène, Eva et Ethan**
-
-## 📝 Notes
-
-- Le jeu actuel est une démo
-- Les deux premiers mondes sont jouables
-- Des mondes supplémentaires peuvent être ajoutés en suivant le même modèle (nouvelle fonction `lancer_monde()`)
-- Les sons du monde 2 sont actuellement désactivés (commentés)
 
 ## 🚀 Améliorations futures possibles
 
