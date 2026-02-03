@@ -93,7 +93,7 @@ pip install pygame
 Lancez le monde 1 :
 
 ```bash
-python Maria_Peigne_monde_1.py
+python menu.py
 ```
 
 Le monde 2 se lance automatiquement quand vous passez le portail du monde 1.
