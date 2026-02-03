@@ -68,13 +68,13 @@ class MenuPrincipal:
         self.root = Tk()
         self.root.title("Maria Peigne - Menu Principal")
         
-        # Couleurs sobres
-        self.bg_color = "#1e1e2e"
-        self.text_color = "#cdd6f4"
-        self.accent_color = "#89b4fa"
-        self.secondary_color = "#a6adc8"
-        self.btn_color = "#45475a"
-        self.btn_hover = "#585b70"
+        # Couleurs inspirées de Maria
+        self.bg_color = "#0d0d0d"       # Noir (fond de l'image)
+        self.text_color = "#f5d5c8"     # Beige rosé (peau)
+        self.accent_color = "#8b2942"   # Rouge bordeaux (lèvres)
+        self.secondary_color = "#c9a066" # Doré (boucles d'oreilles)
+        self.btn_color = "#5c3a21"      # Marron (cheveux)
+        self.btn_hover = "#7a4d2e"      # Marron clair
         
         self.root.configure(bg=self.bg_color)
         
@@ -82,13 +82,23 @@ class MenuPrincipal:
         self.root.attributes('-fullscreen', True)
         self.root.bind('<Escape>', lambda e: self.root.destroy())
         
-        # Frame conteneur centré
+        # Frame conteneur centré (plus haut)
         self.container = Frame(self.root, bg=self.bg_color)
-        self.container.place(relx=0.5, rely=0.5, anchor='center')
+        self.container.place(relx=0.5, rely=0.45, anchor='center')
         
         self.creer_interface()
         
-    def creer_interface(self):
+    def creer_interface(self):        
+        # Image de Maria (agrandie x3)
+        self.maria_img_base = PhotoImage(file=r"Textures\Maria.png")
+        self.maria_img = self.maria_img_base.zoom(3, 3)
+        maria_label = Label(
+            self.container,
+            image=self.maria_img,
+            bg=self.bg_color
+        )
+        maria_label.pack(pady=(0, 20))
+        
         # Titre du jeu
         titre = Label(
             self.container, 
@@ -102,7 +112,7 @@ class MenuPrincipal:
         # Sous-titre
         sous_titre = Label(
             self.container, 
-            text="Collecte les 3 clés pour ouvrir le portail", 
+            text="Collecte les objets et avance de monde en monde.", 
             font=("Segoe UI", 14),
             fg=self.secondary_color,
             bg=self.bg_color
@@ -113,16 +123,16 @@ class MenuPrincipal:
         frame_boutons = Frame(self.container, bg=self.bg_color)
         frame_boutons.pack(pady=10)
         
-        # Bouton Jouer (accent)
+        # Bouton Jouer (accent) - plus grand
         btn_jouer = BoutonArrondi(
             frame_boutons,
             text="Jouer",
             command=self.lancer_jeu,
-            width=220, height=50, radius=25,
+            width=300, height=60, radius=30,
             bg_color=self.accent_color,
-            hover_color="#7ba3e8",
-            text_color="#1e1e2e",
-            font=("Segoe UI", 16, "bold")
+            hover_color="#a33d56",
+            text_color="#f5d5c8",
+            font=("Segoe UI", 24, "bold")
         )
         btn_jouer.pack(pady=10)
         
@@ -139,8 +149,8 @@ class MenuPrincipal:
         # Frame pour les boutons icônes - juste au-dessus des crédits
         frame_icones = Frame(self.root, bg=self.bg_color)
         frame_icones.pack(side='bottom', pady=10)
-        
-        # Bouton Quitter (porte avec flèche)
+
+        # Bouton Quitter (porte)
         btn_quitter = BoutonArrondi(
             frame_icones,
             text="🚪",
@@ -188,25 +198,80 @@ class MenuPrincipal:
         # Titre
         titre = Label(
             container, 
-            text="Mode Développeur", 
+            text="Paramètres", 
             font=("Segoe UI", 24, "bold"),
             fg=self.text_color,
             bg=self.bg_color
         )
         titre.pack(pady=(30, 10))
         
-        # Description
-        desc = Label(
-            container, 
-            text="Visualisez les niveaux en version réduite", 
-            font=("Segoe UI", 12),
-            fg=self.secondary_color,
+        # Frame principal avec deux colonnes
+        frame_principal = Frame(container, bg=self.bg_color)
+        frame_principal.pack(pady=20)
+        
+        # Colonne gauche - Tutoriel touches
+        frame_tuto = Frame(frame_principal, bg=self.bg_color)
+        frame_tuto.pack(side='left', padx=40)
+        
+        titre_tuto = Label(
+            frame_tuto,
+            text="Contrôles",
+            font=("Segoe UI", 16, "bold"),
+            fg=self.accent_color,
             bg=self.bg_color
         )
-        desc.pack(pady=(0, 30))
+        titre_tuto.pack(pady=(0, 15))
+        
+        touches = [
+            ("Z", "Avancer"),
+            ("S", "Reculer"),
+            ("Q", "Aller à gauche"),
+            ("D", "Aller à droite"),
+            ("A", "Entrer dans le portail"),
+            ("Échap", "Quitter le jeu"),
+        ]
+        
+        for touche, action in touches:
+            frame_ligne = Frame(frame_tuto, bg=self.bg_color)
+            frame_ligne.pack(fill='x', pady=3)
+            
+            lbl_touche = Label(
+                frame_ligne,
+                text=touche,
+                font=("Segoe UI", 12, "bold"),
+                fg="#1e1e2e",
+                bg=self.accent_color,
+                width=8,
+                padx=5,
+                pady=2
+            )
+            lbl_touche.pack(side='left')
+            
+            lbl_action = Label(
+                frame_ligne,
+                text=f"  {action}",
+                font=("Segoe UI", 12),
+                fg=self.text_color,
+                bg=self.bg_color,
+                anchor='w'
+            )
+            lbl_action.pack(side='left', padx=10)
+        
+        # Colonne droite - Outils dev
+        frame_outils = Frame(frame_principal, bg=self.bg_color)
+        frame_outils.pack(side='left', padx=40)
+        
+        titre_outils = Label(
+            frame_outils,
+            text="Outils Dev",
+            font=("Segoe UI", 16, "bold"),
+            fg=self.accent_color,
+            bg=self.bg_color
+        )
+        titre_outils.pack(pady=(0, 15))
         
         # Frame pour les boutons
-        frame = Frame(container, bg=self.bg_color)
+        frame = Frame(frame_outils, bg=self.bg_color)
         frame.pack(pady=10)
         
         # Liste des boutons admin
@@ -229,9 +294,9 @@ class MenuPrincipal:
             )
             btn.pack(pady=8)
         
-        # Bouton Retour
+        # Bouton Retour (centré en bas)
         btn_retour = BoutonArrondi(
-            frame,
+            container,
             text="Retour",
             command=admin_window.destroy,
             width=280, height=45, radius=22,
