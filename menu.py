@@ -6,6 +6,63 @@ import subprocess
 import sys
 import os
 
+class BoutonArrondi(Canvas):
+    """Bouton avec coins arrondis"""
+    def __init__(self, parent, text, command, width=220, height=50, radius=25, 
+                 bg_color="#45475a", hover_color="#585b70", text_color="#cdd6f4",
+                 font=("Segoe UI", 14, "bold"), **kwargs):
+        super().__init__(parent, width=width, height=height, 
+                        bg=parent.cget('bg'), highlightthickness=0, **kwargs)
+        
+        self.command = command
+        self.bg_color = bg_color
+        self.hover_color = hover_color
+        self.text_color = text_color
+        self.radius = radius
+        self.btn_width = width
+        self.btn_height = height
+        self.text = text
+        self.font = font
+        
+        self.dessiner(bg_color)
+        
+        # Events
+        self.bind('<Enter>', self.on_enter)
+        self.bind('<Leave>', self.on_leave)
+        self.bind('<Button-1>', self.on_click)
+        self.config(cursor='hand2')
+        
+    def dessiner(self, color):
+        """Dessine le bouton arrondi"""
+        self.delete('all')
+        r = self.radius
+        w = self.btn_width
+        h = self.btn_height
+        
+        # Rectangle arrondi (avec des arcs aux coins)
+        self.create_arc(0, 0, r*2, r*2, start=90, extent=90, fill=color, outline=color)
+        self.create_arc(w-r*2, 0, w, r*2, start=0, extent=90, fill=color, outline=color)
+        self.create_arc(0, h-r*2, r*2, h, start=180, extent=90, fill=color, outline=color)
+        self.create_arc(w-r*2, h-r*2, w, h, start=270, extent=90, fill=color, outline=color)
+        
+        # Rectangles pour remplir le centre
+        self.create_rectangle(r, 0, w-r, h, fill=color, outline=color)
+        self.create_rectangle(0, r, w, h-r, fill=color, outline=color)
+        
+        # Texte centré
+        self.create_text(w/2, h/2, text=self.text, fill=self.text_color, font=self.font)
+        
+    def on_enter(self, event):
+        self.dessiner(self.hover_color)
+        
+    def on_leave(self, event):
+        self.dessiner(self.bg_color)
+        
+    def on_click(self, event):
+        if self.command:
+            self.command()
+
+
 class MenuPrincipal:
     def __init__(self):
         self.root = Tk()
@@ -56,53 +113,18 @@ class MenuPrincipal:
         frame_boutons = Frame(self.container, bg=self.bg_color)
         frame_boutons.pack(pady=10)
         
-        # Bouton Jouer
-        btn_jouer = Label(
+        # Bouton Jouer (accent)
+        btn_jouer = BoutonArrondi(
             frame_boutons,
             text="Jouer",
-            font=("Segoe UI", 16, "bold"),
-            fg="#1e1e2e",
-            bg=self.accent_color,
-            width=18,
-            height=2,
-            cursor='hand2'
+            command=self.lancer_jeu,
+            width=220, height=50, radius=25,
+            bg_color=self.accent_color,
+            hover_color="#7ba3e8",
+            text_color="#1e1e2e",
+            font=("Segoe UI", 16, "bold")
         )
         btn_jouer.pack(pady=10)
-        btn_jouer.bind('<Button-1>', lambda e: self.lancer_jeu())
-        btn_jouer.bind('<Enter>', lambda e: btn_jouer.config(bg="#7ba3e8"))
-        btn_jouer.bind('<Leave>', lambda e: btn_jouer.config(bg=self.accent_color))
-        
-        # Bouton Paramètres
-        btn_admin = Label(
-            frame_boutons,
-            text="Paramètres",
-            font=("Segoe UI", 14),
-            fg=self.text_color,
-            bg=self.btn_color,
-            width=18,
-            height=2,
-            cursor='hand2'
-        )
-        btn_admin.pack(pady=10)
-        btn_admin.bind('<Button-1>', lambda e: self.ouvrir_menu_admin())
-        btn_admin.bind('<Enter>', lambda e: btn_admin.config(bg=self.btn_hover))
-        btn_admin.bind('<Leave>', lambda e: btn_admin.config(bg=self.btn_color))
-        
-        # Bouton Quitter
-        btn_quitter = Label(
-            frame_boutons,
-            text="Quitter",
-            font=("Segoe UI", 14),
-            fg=self.secondary_color,
-            bg="#313244",
-            width=18,
-            height=2,
-            cursor='hand2'
-        )
-        btn_quitter.pack(pady=10)
-        btn_quitter.bind('<Button-1>', lambda e: self.root.destroy())
-        btn_quitter.bind('<Enter>', lambda e: btn_quitter.config(bg="#3d3d52"))
-        btn_quitter.bind('<Leave>', lambda e: btn_quitter.config(bg="#313244"))
         
         # Crédits en bas de l'écran
         credits = Label(
@@ -113,6 +135,36 @@ class MenuPrincipal:
             bg=self.bg_color
         )
         credits.pack(side='bottom', pady=30)
+        
+        # Frame pour les boutons icônes - juste au-dessus des crédits
+        frame_icones = Frame(self.root, bg=self.bg_color)
+        frame_icones.pack(side='bottom', pady=10)
+        
+        # Bouton Quitter (porte avec flèche)
+        btn_quitter = BoutonArrondi(
+            frame_icones,
+            text="🚪",
+            command=self.root.destroy,
+            width=60, height=60, radius=30,
+            bg_color="#313244",
+            hover_color="#3d3d52",
+            text_color=self.secondary_color,
+            font=("Segoe UI", 24)
+        )
+        btn_quitter.pack(side='left', padx=15)
+
+        # Bouton Paramètres (engrenage)
+        btn_admin = BoutonArrondi(
+            frame_icones,
+            text="⚙",
+            command=self.ouvrir_menu_admin,
+            width=60, height=60, radius=30,
+            bg_color=self.btn_color,
+            hover_color=self.btn_hover,
+            text_color=self.text_color,
+            font=("Segoe UI", 24)
+        )
+        btn_admin.pack(side='left', padx=15)
         
     def lancer_jeu(self):
         """Lance le jeu principal (Monde 1)"""
@@ -165,36 +217,30 @@ class MenuPrincipal:
         ]
         
         for texte, fichier in boutons:
-            btn = Label(
+            btn = BoutonArrondi(
                 frame,
                 text=texte,
-                font=("Segoe UI", 13),
-                fg=self.text_color,
-                bg=self.btn_color,
-                width=25,
-                height=2,
-                cursor='hand2'
+                command=lambda f=fichier: self.lancer_outil(f),
+                width=280, height=45, radius=22,
+                bg_color=self.btn_color,
+                hover_color=self.btn_hover,
+                text_color=self.text_color,
+                font=("Segoe UI", 13)
             )
             btn.pack(pady=8)
-            btn.bind('<Button-1>', lambda e, f=fichier: self.lancer_outil(f))
-            btn.bind('<Enter>', lambda e, b=btn: b.config(bg=self.btn_hover))
-            btn.bind('<Leave>', lambda e, b=btn: b.config(bg=self.btn_color))
         
         # Bouton Retour
-        btn_retour = Label(
+        btn_retour = BoutonArrondi(
             frame,
             text="Retour",
-            font=("Segoe UI", 13),
-            fg=self.secondary_color,
-            bg="#313244",
-            width=25,
-            height=2,
-            cursor='hand2'
+            command=admin_window.destroy,
+            width=280, height=45, radius=22,
+            bg_color="#313244",
+            hover_color="#3d3d52",
+            text_color=self.secondary_color,
+            font=("Segoe UI", 13)
         )
         btn_retour.pack(pady=25)
-        btn_retour.bind('<Button-1>', lambda e: admin_window.destroy())
-        btn_retour.bind('<Enter>', lambda e: btn_retour.config(bg="#3d3d52"))
-        btn_retour.bind('<Leave>', lambda e: btn_retour.config(bg="#313244"))
         
     def lancer_outil(self, nom_fichier):
         """Lance un outil admin dans une nouvelle fenêtre"""
